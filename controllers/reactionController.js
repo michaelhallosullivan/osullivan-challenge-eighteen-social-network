@@ -1,25 +1,38 @@
-const User = require('../models/User');
+const { reactionSchema, Thought } = require('../models');
+
+// Add a reaction
+async function addReaction(req, res) {
+  try {
+    const reaction = await Thought.findOneAndUpdate(
+      { _id: req.params.thoughtId },
+      { $addToSet: { reactions: req.body } },
+      { new: true }
+    );
+    res.json(reaction);
+    res.json({ message: 'Reaction added!' })
+  }
+  catch(err) {
+    res.status(500).json(err)
+  }
+}
+
+// Remove a reaction
+async function removeReaction(req, res) {
+  try {
+    const reaction = await Thought.findOneAndUpdate(
+      { _id: req.params.thoughtId },
+      { $pull: { reactions: { reactionId: req.params.reactionId } } },
+      { new: true }
+    );
+    res.json(reaction);
+    res.json({ message: 'Reaction deleted!' })
+  }
+  catch(err) {
+    res.status(500).json(err)
+  }
+}
 
 module.exports = {
-  getUsers(req, res) {
-    User.find()
-      .then((users) => res.json(users))
-      .catch((err) => res.status(500).json(err));
-  },
-  getSingleUser(req, res) {
-    User.findOne({ _id: req.params.userId })
-      .select('-__v')
-      .then((user) =>
-        !user
-          ? res.status(404).json({ message: 'No user with that ID' })
-          : res.json(user)
-      )
-      .catch((err) => res.status(500).json(err));
-  },
-  // create a new user
-  createUser(req, res) {
-    User.create(req.body)
-      .then((dbUserData) => res.json(dbUserData))
-      .catch((err) => res.status(500).json(err));
-  },
-};
+  addReaction, 
+  removeReaction
+}

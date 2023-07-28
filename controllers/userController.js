@@ -1,51 +1,24 @@
-const User = require('../models/User');
+const User = require('../models');
 
-module.exports = {
-  getUsers(req, res) {
-    User.find()
-      .then((users) => res.json(users))
-      .catch((err) => res.status(500).json(err));
-  },
-  getSingleUser(req, res) {
-    User.findOne({ _id: req.params.userId })
-      .select('-__v')
-      .then((user) =>
-        !user
-          ? res.status(404).json({ message: 'No user with that ID' })
-          : res.json(user)
-      )
-      .catch((err) => res.status(500).json(err));
-  },
-  // create a new user
-  createUser(req, res) {
-    User.create(req.body)
-      .then((dbUserData) => res.json(dbUserData))
-      .catch((err) => res.status(500).json(err));
-  },
-};
-
-/* refactored code
-const { Post, User } = require('../models');
-
-//get all posts
-async function getPosts(req, res) {
+//get all users
+async function getUsers(req, res) {
   try {
-    const posts = await Post.find();
-    res.json(posts);
+    const users = await User.find();
+    res.json(users);
   }
   catch (err) {
     res.status(500).json(err);
   }
 }
-//get a single post
-async function getSinglePost(req, res) {
+//get a single user
+async function getSingleUser(req, res) {
   try {
-    const post = await Post.findOne({ _id: req.params.postId });
-    if (post) {
-      res.json(post);
+    const user = await User.findOne({ _id: req.params.userId });
+    if (user) {
+      res.json(user);
     }
     else {
-      res.status(404).json({ message: 'No post with that ID' });
+      res.status(404).json({ message: 'No user with that ID' });
     }
   } 
   catch (err) {
@@ -53,31 +26,54 @@ async function getSinglePost(req, res) {
   }
 }
 
-// create a new post
-async function createPost(req, res) {
+// create a new user
+async function createUser(req, res) {
   try { 
-    const post = await Post.create(req.body);
+    const user = await User.create(req.body);
+    res.json(user);
+  } 
+  catch (err) {
+    res.status(500).json(err);
+  }
+}
+
+// delete a user
+async function deleteUser(req, res) {
+  try {
+    const user = await User.findOneAndRemove({ _id: req.params.userId });
+    res.json(user);
+    res.json({ message: 'User removed!' });
+  }
+  catch (err) {
+    res.status(500).json(err);
+  }
+}
+
+// update a user
+async function updateUser(req, res) {
+  try {
     const user = await User.findOneAndUpdate(
-          { _id: req.body.userId },
-          { $addToSet: { posts: post._id } },
-          { new: true }
+      { _id: req.params.userId },
+      { $set: req.body },
+      { new: true }
     );
     if (user) {
-      res.json('Created the post 🎉');
+      res.json('Updated user!');
+      res.json(user);
     }
     else {
-      res.status(404).json({ message: 'Post created, but found no user with that ID' })
+      res.status(404).json({ message: 'User not found'})
     }
-  } catch (err) {
-      console.log(err);
-      res.status(500).json(err);
-    }
+  } 
+  catch (err) {
+    res.status(500).json(err);
+  }
 }
 
 module.exports = {
-  getPosts, 
-  getSinglePost, 
-  createPost
+  getUsers, 
+  getSingleUser, 
+  createUser,
+  deleteUser,
+  updateUser
 }
-
-*/
