@@ -8,13 +8,12 @@ async function addReaction(req, res) {
       { $addToSet: { reactions: req.body } },
       { new: true }
     );
-    res.json(reaction);
-    res.json({ message: 'Reaction added!' })
+    res.json('Reaction added!');
   }
   catch(err) {
-    res.status(500).json(err)
+    res.status(500).json(err);
   }
-}
+};
 
 // Remove a reaction
 async function removeReaction(req, res) {
@@ -24,15 +23,14 @@ async function removeReaction(req, res) {
       { $pull: { reactions: { reactionId: req.params.reactionId } } },
       { new: true }
     );
-    res.json(reaction);
-    res.json({ message: 'Reaction deleted!' })
+    res.json('Reaction deleted!');
   }
   catch(err) {
-    res.status(500).json(err)
+    res.status(500).json(err);
   }
-}
+};
 
 module.exports = {
   addReaction, 
   removeReaction
-}
+};

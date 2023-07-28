@@ -1,31 +1,31 @@
-const User = require('../models');
+const User = require('../models/User');
 
 //get all users
 async function getUsers(req, res) {
   try {
-    const users = await User.find({});
-    res.json(users);
+    const users = await User.find();
+    res.status(200).json(users);
   }
   catch (err) {
     res.status(500).json(err);
   }
-}
+};
 
 //get a single user
 async function getSingleUser(req, res) {
   try {
     const user = await User.findOne({ _id: req.params.userId });
     if (user) {
-      res.json(user);
+      res.status(200).json(user);
     }
     else {
-      res.status(404).json({ message: 'No user with that ID' });
+      res.status(404).json('No user with that ID');
     }
   } 
   catch (err) {
     res.status(500).json(err);
   }
-}
+};
 
 // create a new user
 async function createUser(req, res) {
@@ -36,19 +36,18 @@ async function createUser(req, res) {
   catch (err) {
     res.status(500).json(err);
   }
-}
+};
 
 // delete a user
 async function deleteUser(req, res) {
   try {
     const user = await User.findOneAndRemove({ _id: req.params.userId });
-    res.json(user);
-    res.json({ message: 'User removed!' });
+    res.json('User removed!');
   }
   catch (err) {
     res.status(500).json(err);
   }
-}
+};
 
 // update a user
 async function updateUser(req, res) {
@@ -60,16 +59,15 @@ async function updateUser(req, res) {
     );
     if (user) {
       res.json('Updated user!');
-      res.json(user);
     }
     else {
-      res.status(404).json({ message: 'User not found'})
+      res.status(404).json('User not found');
     }
   } 
   catch (err) {
     res.status(500).json(err);
   }
-}
+};
 
 module.exports = {
   getUsers, 
@@ -77,4 +75,4 @@ module.exports = {
   createUser,
   deleteUser,
   updateUser
-}
+};
