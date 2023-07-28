@@ -3,13 +3,14 @@ const User = require('../models');
 //get all users
 async function getUsers(req, res) {
   try {
-    const users = await User.find();
+    const users = await User.find({});
     res.json(users);
   }
   catch (err) {
     res.status(500).json(err);
   }
 }
+
 //get a single user
 async function getSingleUser(req, res) {
   try {
