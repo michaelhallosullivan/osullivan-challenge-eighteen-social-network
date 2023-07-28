@@ -9,23 +9,23 @@ async function getThoughts(req, res) {
   catch (err) {
     res.status(500).json(err);
   }
-}
+};
 
 //get a single thought
 async function getSingleThought(req, res) {
   try {
-    const thought = await Thought.findOne({ _id: req.params.userId });
+    const thought = await Thought.findOne({ _id: req.params.thoughtId });
     if (thought) {
       res.json(thought);
     }
     else {
-      res.status(404).json({ message: 'No thought with that ID' });
+      res.status(404).json('No thought with that ID');
     }
   } 
   catch (err) {
     res.status(500).json(err);
   }
-}
+};
 
 // create a new thought
 async function createThought(req, res) {
@@ -37,16 +37,15 @@ async function createThought(req, res) {
           { new: true }
     );
     if (user) {
-      res.json('Created the thought 🎉');
+      res.json('New thought created!');
     }
     else {
-      res.status(404).json({ message: 'Thought created, but found no user with that username' })
+      res.status(404).json('Thought created, but found no user with that username');
     }
   } catch (err) {
-      console.log(err);
       res.status(500).json(err);
     }
-}
+};
 
 //delete thought
 async function deleteThought(req, res) {
@@ -57,14 +56,12 @@ async function deleteThought(req, res) {
         { $pull: { thoughts: req.params.thoughtId } },
         { new: true }
     );
-    res.json(thought);
-    res.json(user);
-    res.json({ message: 'Thought successfully deleted!' })
+    res.json('Thought successfully deleted!');
   }
   catch {
-    res.status(404).json({ message: 'No thought with this id!' });
+    res.status(404).json('No thought with this id!');
   }
-}
+};
 
 // update a thought
 async function updateThought(req, res) {
@@ -76,16 +73,15 @@ async function updateThought(req, res) {
     );
     if (thought) {
       res.json('Updated thought!');
-      res.json(thought);
     }
     else {
-      res.status(404).json({ message: 'Thought not found'})
+      res.status(404).json('Thought not found');
     }
   } 
   catch (err) {
     res.status(500).json(err);
   }
-}
+};
 
 module.exports = {
   getThoughts, 
@@ -93,4 +89,4 @@ module.exports = {
   createThought,
   deleteThought,
   updateThought
-}
+};
